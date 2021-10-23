@@ -25,9 +25,13 @@
 
 #define measurement_delay 30000 //Time interval between each measurement in milliseconds
 
-DHT dht(DHTPIN, DHTTYPE);
 
+//Initilize variables
+
+float temp, humidity;//Store local data
+DHT dht(DHTPIN, DHTTYPE);
 WiFiClientSecure client; //Create client for ThingSpeak
+
 
 void setup(){
   Serial.begin(115200);
@@ -61,9 +65,28 @@ void setup(){
   dht.begin();
 }
 
+
+
 void loop(){
-  float temp = dht.readTemperature();//Fetch temperature from sensor in calcius
-  float humidity = dht.readHumidity();//Fetch relative humidity from sensor
+  //Fetch local data
+  fetch_temp_and_humidity(temp, humidity);
+  //Write to ThingSpeak
+  write_to_ThingSpeak(temp, humidity);
+  delay(measurement_delay);
+}
+
+
+/*HELPER FUNCTIONS
+ * Get local data
+ * Write to ThingSpeak
+ */
+
+
+//Read local data from sensors
+void fetch_temp_and_humidity(float& temp, float& humidity){
+
+  temp = dht.readTemperature();//Fetch temperature from sensor in calcius
+  humidity = dht.readHumidity();//Fetch relative humidity from sensor
   
   if (isnan(temp) || isnan(humidity)){//Check if reading is invalid
     Serial.println("Invalid read from DHT11-sensor");
@@ -76,8 +99,13 @@ void loop(){
   Serial.print("Humidity: ");
   Serial.print(humidity);
   Serial.println("%");
-  
-  
+
+  return;
+}
+
+
+//Write local data to ThingSpeak
+void write_to_ThingSpeak(const float temp, const float humidity){
   ThingSpeak.setField(1, temp);
   ThingSpeak.setField(2, humidity);
 
@@ -89,7 +117,5 @@ void loop(){
     Serial.println(val);
   } 
   Serial.println("-------------------------------------------------");
-  
-
-  delay(measurement_delay);
+  return;
 }
