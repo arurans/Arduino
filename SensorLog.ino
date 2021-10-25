@@ -72,6 +72,7 @@ void loop(){
   fetch_temp_and_humidity(temp, humidity);
   //Write to ThingSpeak
   write_to_ThingSpeak(temp, humidity);
+  Serial.println("-------------------------------------------------");
   delay(measurement_delay);
 }
 
@@ -116,6 +117,6 @@ void write_to_ThingSpeak(const float temp, const float humidity){
     Serial.print("Error while uploading data to ThingSpeak channel. Error code: ");
     Serial.println(val);
   } 
-  Serial.println("-------------------------------------------------");
+
   return;
 }
