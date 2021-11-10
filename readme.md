@@ -2,7 +2,9 @@
 
 Code for reading local temperature and humidity from a DHT11 sensor and logging data on ThingSpeak, in addition to displaying on OLED screen.
 
-Look at picture folder to see results.
+Look at picture folder to see results. 
+
+Display ThingSpeak plots on mobile with "ThingView Free" app.
 
 **TODO:**
 
